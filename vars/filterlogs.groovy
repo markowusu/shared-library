@@ -4,7 +4,7 @@
 
 import org.apache.commons.lang.StringUtils
 
-def filterBuildLogs(String filter_string, int occurences,int log_num = 1000){
+def call(String filter_string, int occurences,int log_num = 1000){
     def logs  = currentBuild.rawBuild.getLog(log_num).join('\n')
 
     int count = StringUtils.countMatches(logs, filter_string);
