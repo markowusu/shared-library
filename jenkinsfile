@@ -1,0 +1,50 @@
+#!/usr/bin/env groovy
+def call(String name= 'terateck'){
+    echo "Running ${name} shared library"
+}
+
+
+pipeline {
+    agent none
+    //  Settign up  to ensure the process does not hang up after 
+    stages{
+        stage('Build'){
+            agent{
+                docker {
+                    image 'python:3.8.3-alpine'
+                }
+            }
+            steps {
+                //  This is a command to compile your python code 
+                // the codes then place in to teh sources workspace of jenkins 
+                // python_app --> name of the application in python 
+                sh 'python -m py_compile sources/python_app.py'
+
+                //  stashih the compiled byte code from the jenkins sources for use on a later time
+                //  'teracteck-compiled-source'  -->  name of stashed source code and byte code geneated by pyinstaller 
+                stash(name: 'teracteck-compiled-source', includes: 'sources/*.py*')
+            }
+        }
+
+        stage ('Deliver'){
+            agent any 
+            environment {
+                VOLUME = "$(pwd)/sources:/src"
+                IMAGE = 'cdrx/pyinstaller-linux:python3'
+            }
+
+            steps {
+                dir(path : env.BUILD_ID){
+                    unstash(name: 'terateck-compiled-source'
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F applicatio.py'")
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts "${env.BUILD_ID}/source/dist/application"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'" 
+                }
+            }
+        }
+    }
+}
