@@ -1,0 +1,102 @@
+#!/usr/bin/env groovy
+// @Library('shared-library')_
+
+
+pipeline {
+    agent none
+
+    // triggers {
+    //     pollSCM('*/5 * * * 1-5')
+    // }
+
+     options {
+        skipDefaultCheckout(true)
+        // Keep the 10 most recent builds
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+        timestamps()
+    }
+
+    environment {
+      PATH="/var/lib/jenkins/miniconda3/bin:$PATH"
+    }
+    //  Settign up  to ensure the process does not hang up after 
+    stages{
+            stage("Checkout Code") {
+            steps {
+            script {
+                git branch: "main",
+                    credentialsId: 'BKGQB291K',
+                    url: 'https://github.com/markowusu/FastAPI_tutorials_PRO.git'
+            }
+        }
+    }
+
+        stage('Build'){
+            agent{
+                docker {
+                    image 'python:3.8.3-alpine'
+                }
+            }
+
+            steps {
+
+                sh 'pip install -r requirements.txt'
+
+                //  This is a command to compile your python code 
+                // the codes then place in to teh sources workspace of jenkins 
+                // python_app --> name of the application in python 
+                
+                // sh 'python -m py_compile sources/python_app.py'
+
+                //  stashih the compiled byte code from the jenkins sources for use on a later time
+                //  'teracteck-compiled-source'  -->  name of stashed source code and byte code geneated by pyinstaller 
+                // stash(name: 'teracteck-compiled-source', includes: 'sources/*.py*')
+            }
+        }
+
+        stage ('Deliver'){
+            agent any 
+            environment {
+                VOLUME = "$(pwd)/sources:/src"
+                IMAGE = 'cdrx/pyinstaller-linux:python3'
+            }
+
+            steps {
+                dir(path : env.BUILD_ID){
+                    unstash(name: 'terateck-compiled-source'
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F applicatio.py'")
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts "${env.BUILD_ID}/source/dist/application"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'" 
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Terateck CD in progresss'
+        }
+        success {
+            echo 'CD build is successful'
+            mail to: 'macositnow@gmail.com',
+                 subject: 'CD build is Successful',
+                 body: "The image has built succesfuly"
+        }
+        }
+        failure {
+            echo 'Build failed; Perform a regression test'
+        }
+        unstable {
+            echo 'Build marked as UNSTABLE'
+        }
+        changed {
+            echo 'state of the Pipeline has changed'
+            // echo 'For example, if the Pipeline was previously failing but is now successful'
+        }
+
+
+}
