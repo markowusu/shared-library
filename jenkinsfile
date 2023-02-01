@@ -22,8 +22,8 @@ pipeline {
             steps {
             script {
                 git branch: "main",
-                    credentialsId: 'BKGQB291K',
-                    url: 'https://github.com/markowusu/FastAPI_tutorials_PRO.git'
+                    credentialsId: '',
+                    url: 'https://github.com/Joetib/webapp.git'
             }
         }
     }
