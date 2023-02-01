@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-
 def call(Map args) {
     def awsCredentialsId = args.credentialsId
     def awsRegion = args.awsRegion
