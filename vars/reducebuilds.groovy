@@ -1,4 +1,4 @@
-#!/urs/bin/env/ groovy
+#!/urs/bin/env groovy
 
 def call(){
  def builds = currentBuild.getRawBuild().getParent().getBuilds()
