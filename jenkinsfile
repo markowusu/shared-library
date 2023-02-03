@@ -15,6 +15,10 @@ pipeline {
      
     }
 
+    environment {
+        dockerhub = credentials('Dockerhub')
+    }
+
    
     //  Settign up  to ensure the process does not hang up after 
     stages{
