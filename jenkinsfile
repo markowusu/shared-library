@@ -32,21 +32,21 @@ pipeline {
         }
     }
 
+        stage("Login to AWS ECR") {
+            steps {
+                sh 'docker login'
+
+                loginToAwsEcr(credentialsId: "1281b2be-69e3-4045-895c-361a31581f57", awsRegion: "us-east-1", awsAccountId: "001526952227")
+            }
+        }
+
+
      stage('Build') {
             steps {
                 sh 'docker build -t mypythonapp .'
             }
 
      }
-
-
-        stage("Login to AWS ECR") {
-            steps {
-                loginToAwsEcr(credentialsId: "1281b2be-69e3-4045-895c-361a31581f57", awsRegion: "us-east-1", awsAccountId: "001526952227")
-            }
-        }
-    
-
         stage("Push Docker image to AWS ECR") {
             steps {
                 sh 'docker tag mypythonapp:latest 001526952227.dkr.ecr.us-east-1.amazonaws.com/mypythonapp:latest'

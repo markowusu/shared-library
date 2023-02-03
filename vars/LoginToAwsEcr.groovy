@@ -12,8 +12,8 @@ def call(Map args) {
     withCredentials([aws(credentialsId: awsCredentialsId, region: awsRegion)]) {
 
         // sh "aws ecr get-login-password | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com"
-        echo '${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
-        sh 'docker login --username AWS --password-stdin $(aws ecr get-login-password --region ${awsRegion}) ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
+     sh 'echo ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
+        sh 'docker login --username AWS --password $(aws ecr get-login-password --region ${awsRegion}) ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
 
     }
 }
