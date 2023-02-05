@@ -9,20 +9,13 @@ def call(Map args) {
 
     def awsAccountId = args.awsAccountId
 
-//       withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',credentialsId: awsCredentialsId]]) {
-//    container('aws-cli') {
-//       sh('env')
-//       sh('aws sts get-caller-identity')
-//     }
-// }
-
-    withCredentials([aws(credentialsId: awsCredentialsId)]) {
+    withCredentials([aws(credentialsId: awsCredentialsId, region: awsRegion)]) {
 
         // sh "aws ecr get-login-password | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com"
-     sh 'echo ${awsCredentialsId}'
-     sh 'env'
-     sh 'aws sts get-caller-identity'
-     sh 'docker login --username AWS --password $(aws ecr get-login-password --region ${awsRegion}) ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
+        echo '${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
+        
+        sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 001526952227.dkr.ecr.us-east-1.amazonaws.com'
+        // sh 'docker login --username AWS -p $(aws ecr get-login-password --region ${awsRegion}) ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com'
 
     }
 }
