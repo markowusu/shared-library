@@ -17,7 +17,7 @@ pipeline {
     }
     
       environment{
-        JENKINS_PUSH_BRNACH = 'ngnix_yaml'
+        JENKINS_PUSH_BRANCH = 'ngnix_yaml'
 
     }
    
@@ -80,7 +80,7 @@ pipeline {
                 script{
                     sh 'mkdir -p Manifest'
                     dir("Manifest"){
-                        git branch : "jenkins_pipeline",
+                        git branch : "jenkins_pipeline_${BUILD_ID}",
                         credentialsId: "github",
                         url: "https://github.com/terateck/manifests.git"
                     }
@@ -127,9 +127,9 @@ post{
         }
         success {
             echo 'CD build is successful'
-            // mail to: 'macositnow@gmail.com',
-            //      subject: 'CD build is Successful',
-            //      body: "The image has built succesfuly"
+            mail to: 'markowusuayim@gmail.com',
+                 subject: 'CD build is Successful',
+                 body: "The image has built succesfuly"
         }
         
         failure {

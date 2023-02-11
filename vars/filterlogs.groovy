@@ -9,8 +9,8 @@ def call(String filter_string, int occurences,int log_num = 1000){
 
     int count = StringUtils.countMatches(logs, filter_string);
     
-    if (filter_string == 'ERROR' && count == 1 ){
-        currentBuild.result = "FAILURE"
+    if (filter_string == 'ERROR' && count >= 1 ){
+        currentBuild.result = "UNSTABLE"
     }
 
 
