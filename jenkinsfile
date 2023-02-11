@@ -60,7 +60,10 @@ pipeline {
 
         stage("Push Docker image to AWS ECR") {
             steps {
+                script {
                 DockerPushImageToEcr("lastest","001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library")
+
+                }
                 
             }
         }   
