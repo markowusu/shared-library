@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script{ 
                     sh 'docker login'
-                    sh 'docker build -t ${dockerImageName} .'
+                    sh 'docker build -t "${dockerImageName}" .'
                 
                     
                 }
