@@ -51,7 +51,7 @@ pipeline {
                 script{ 
                     sh 'docker login'
                     echo "Thsis the one : ${dockerImageName}" 
-                    sh 'docker build -t "${dockerImageName}" .'
+                    sh "docker build -t ${dockerImageName} ."
                 
                     
                 }
