@@ -3,7 +3,7 @@
 @Library('shared-library')_
 
 // This a global variable for the docker image name
-def dockerImageName = "test/shared_library"
+String dockerImageName = "test/shared_library"
 
 pipeline {
      agent any 
@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script{ 
                     sh 'docker login'
-                    echo "${dockerImageName}" 
+                    echo "Thsis the one : ${dockerImageName}" 
                     sh 'docker build -t "${dockerImageName}" .'
                 
                     
