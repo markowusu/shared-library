@@ -13,3 +13,7 @@ def call(String imageTag, String repository){
                 sh 'echo pushng new image to the ECR repo on aws'
                 sh 'docker push ${repository}:${buildID}'
 }
+
+
+
+
