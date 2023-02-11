@@ -1,4 +1,4 @@
-#!/usr/bin/evn groovy
+#!/usr/bin/env groovy
 
 
 def call(Map args) {
