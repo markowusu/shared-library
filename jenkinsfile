@@ -80,7 +80,7 @@ pipeline {
                 script{
                     sh 'mkdir -p Manifest'
                     dir("Manifest"){
-                        git branch : "jenkins_pipeline_${BUILD_ID}",
+                        git branch : "jenkins_pipeline",
                         credentialsId: "github",
                         url: "https://github.com/terateck/manifests.git"
                     }
@@ -103,12 +103,12 @@ pipeline {
                             sh "sed -i '' 's+001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library.*+001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library:${BUILD_ID}+g' nginx/nginx_deployment.yaml"
 
                             sh 'cat nginx/nginx_deployment.yaml'
-
+                            sh 'git checkout -b jenkins_pipeline_${BUILD_ID}'
                             sh 'git add .'
 
                             sh "git commit -am 'feat: updated the image path of the ngnix deployment file'"
         // https://github.com/terateck/manifests.git
-                            sh 'git push https://github.com/terateck/manifests.git'
+                            sh 'git push https://github.com/terateck/manifests.git jenkins_pipeline_${BUILD_ID}'
                             
                         }
                     }
