@@ -2,6 +2,8 @@
 
 @Library('shared-library')_
 
+// This a global variable for the docker image name
+def dockerImageName = "test/shared_library"
 
 pipeline {
      agent any 
@@ -15,6 +17,8 @@ pipeline {
           buildDiscarder(logRotator(numToKeepStr: '4'))
      
     }
+
+    
     
    
    
@@ -46,7 +50,7 @@ pipeline {
             steps {
                 script{ 
                     sh 'docker login'
-                    sh 'docker build -t test/shared_library .'
+                    sh 'docker build -t ${dockerImageName} .'
                 
                     
                 }
@@ -61,7 +65,7 @@ pipeline {
         stage("Push Docker image to AWS ECR") {
             steps {
                 script {
-                DockerPushToEcr("lastest","001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library")
+                DockerPushToEcr("lastest","${dockerImageName}","001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library")
 
                 }
                 
