@@ -128,7 +128,7 @@ post{
         success {
             echo 'CD build is successful'
             
-        
+        }
         failure {
             echo 'Build failed; Perform a regression test'
         }
