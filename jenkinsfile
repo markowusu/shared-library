@@ -16,6 +16,10 @@ pipeline {
      
     }
     
+      environment{
+        JENKINS_PUSH_BRNACH = 'ngnix_yaml'
+
+    }
    
     
     
@@ -34,9 +38,6 @@ pipeline {
         stage("Login to AWS ECR") {
             steps {
                 script{ 
-                    echo "${AWS_ACCESS_KEY_ID}"
-                    echo env.AWS_ACCESS_KEY_ID
-                    
                    LoginToAwsEcr(credentialsId:"1281b2be-69e3-4045-895c-361a31581f57", awsRegion:"us-east-1", awsAccountId:"001526952227")
                     
                 }
@@ -44,14 +45,12 @@ pipeline {
             }
         }
 
-     stage('Build') {
+     stage('Build Docker Image') {
             steps {
-                script{
-                    
+                script{ 
                     sh 'docker login'
                     sh 'docker build -t test/shared_library .'
-                    
-                    echo 'This works now'
+                
                     
                 }
                 
@@ -157,89 +156,4 @@ post{
 
 
 
-
-
-// #!/usr/bin/env groovy
-// @Library('shared-library')_
-
-
-// pipeline {
-//     agent none
-
-//      options {
-//         skipDefaultCheckout(true)
-//         reduceBuilds()
-//         timestamps()
-
-//         // Keep the 10 most recent builds
-//         //  // buildDiscarder(logRotator(numToKeepStr: '5'))
-     
-//     }
-
-//     environment {
-//         dockerhub = credentials('Dockerhub')
-//     }
-
-   
-//     //  Settign up  to ensure the process does not hang up after 
-//     stages{
-//             stage("Checkout Code") {
-//             steps {
-//             script {
-//                 git branch: "main",
-//                     credentialsId: '',
-//                     url: 'https://github.com/Joetib/webapp.git'
-//             }
-//         }
-//     }
-
-//         stage("Login to AWS ECR") {
-//             steps {
-//                 sh 'docker login'
-
-//                 loginToAwsEcr(credentialsId: "1281b2be-69e3-4045-895c-361a31581f57", awsRegion: "us-east-1", awsAccountId: "001526952227")
-//             }
-//         }
-
-
-//      stage('Build') {
-//             steps {
-//                 sh 'docker build -t mypythonapp .'
-//             }
-
-//      }
-//         stage("Push Docker image to AWS ECR") {
-//             steps {
-//                 sh 'docker tag mypythonapp:latest 001526952227.dkr.ecr.us-east-1.amazonaws.com/mypythonapp:latest'
-//                 sh 'docker push 001526952227.dkr.ecr.us-east-1.amazonaws.com/mypythonapp:latest'
-//                 // sh "docker push 001526952227.dkr.ecr.us-east-1.amazonaws.com/mypythonapp:latest"
-//             }
-//         }   
-
-//     post {
-//         always {
-//             echo 'Terateck CD in progresss'
-//         }
-//         success {
-//             echo 'CD build is successful'
-//             mail to: 'macositnow@gmail.com',
-//                  subject: 'CD build is Successful',
-//                  body: "The image has built succesfuly"
-//         }
-//         }
-//         failure {
-//             echo 'Build failed; Perform a regression test'
-//         }
-//         unstable {
-//             echo 'Build marked as UNSTABLE'
-//         }
-//         changed {
-//             echo 'state of the Pipeline has changed'
-//             // echo 'For example, if the Pipeline was previously failing but is now successful'
-//         }
-
-
-// }
-
-// }
 
