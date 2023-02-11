@@ -16,10 +16,7 @@ pipeline {
      
     }
     
-      environment{
-        JENKINS_PUSH_BRANCH = 'ngnix_yaml'
-
-    }
+   
    
     
     
@@ -63,12 +60,7 @@ pipeline {
 
         stage("Push Docker image to AWS ECR") {
             steps {
-                sh'echo tagging the built image to be pushed to the new repo on aws '
-                sh 'docker tag test/shared_library:latest 001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library:${BUILD_ID}'
                 
-                
-                sh 'echo pushng new image to the ECR repo on aws'
-                sh 'docker push 001526952227.dkr.ecr.us-east-1.amazonaws.com/test/shared_library:${BUILD_ID}'
                 
             }
         }   
